@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Valentine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#b57edc;
+  overflow:hidden;
+  font-family:Poppins,sans-serif;
+}
+
+/* floating background hearts */
+.bg-heart{
+  position:absolute;
+  font-size:20px;
+  animation:float 8s linear infinite;
+  opacity:.6;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh)}
+  to{transform:translateY(-10vh)}
+}
+
+.card{
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  width:360px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+  z-index:5;
+}
+
+h2{
+  font-family:Pacifico,cursive;
+  color:#ff4fa3;
+}
+
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:20px;
+  font-size:18px;
+  margin:10px;
+  cursor:pointer;
+}
+
+#yes{background:#ff69b4;color:white}
+#no{background:#ddd;position:relative}
+
+.confetti{
+  position:absolute;
+  font-size:22px;
+  animation:fall 3s forwards;
+  pointer-events:none;
+}
+
+@keyframes fall{
+  to{transform:translateY(100vh);opacity:0}
+}
+
+.bunny{
+  width:120px;
+  margin-top:10px;
+}
+
+.kiss{
+  position:absolute;
+  font-size:22px;
+  animation:kiss 2s forwards;
+}
+
+@keyframes kiss{
+  to{transform:translateY(-100px);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h2>Kakraba 💜</h2>
+  <p>Will you be my Valentine?</p>
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<audio id="yesSound">
+<source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
+</audio>
+
+<script>
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const card=document.getElementById("card");
+const yesSound=document.getElementById("yesSound");
+
+/* background hearts */
+setInterval(()=>{
+ const h=document.createElement("div");
+ h.className="bg-heart";
+ h.innerHTML="💜";
+ h.style.left=Math.random()*100+"%";
+ h.style.fontSize=15+Math.random()*20+"px";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),8000);
+},400);
+
+/* NO runs away */
+no.addEventListener("mouseover",()=>{
+ no.style.left=Math.random()*200-100+"px";
+ no.style.top=Math.random()*200-100+"px";
+});
+
+/* YES click */
+yes.onclick=()=>{
+ yesSound.play();
+
+ // confetti emojis
+ for(let i=0;i<40;i++){
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.innerHTML=["🎉","💖","💜","💘"][Math.floor(Math.random()*4)];
+  c.style.left=Math.random()*100+"%";
+  c.style.top="-20px";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),3000);
+ }
+
+ // kisses
+ setInterval(()=>{
+  const k=document.createElement("div");
+  k.className="kiss";
+  k.innerHTML="💋";
+  k.style.left=Math.random()*100+"%";
+  k.style.bottom="0";
+  document.body.appendChild(k);
+  setTimeout(()=>k.remove(),2000);
+ },400);
+
+ card.innerHTML=`
+ <h2>🎉 Yaayyyyy! 🎉</h2>
+ <p>
+ Thank you 💖<br><br>
+ I’d rather not spend this day with any other person.<br>
+ I look forward to it.<br><br>
+ I love you 💜
+ </p>
+
+ <img class="bunny" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+ <img class="bunny" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+ `;
+};
+</script>
+
+</body>
+</html>
