@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine</title>
+<title>Valentine 2.1</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins&display=swap" rel="stylesheet">
 
@@ -16,9 +16,10 @@ body {
   background:#b57edc;
   overflow:hidden;
   font-family:Poppins,sans-serif;
+  position:relative;
 }
 
-/* floating background hearts */
+/* floating hearts background */
 .bg-heart{
   position:absolute;
   font-size:20px;
@@ -39,6 +40,7 @@ body {
   text-align:center;
   box-shadow:0 10px 25px rgba(0,0,0,.3);
   z-index:5;
+  position:relative;
 }
 
 h2{
@@ -53,6 +55,11 @@ button{
   font-size:18px;
   margin:10px;
   cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.05);
 }
 
 #yes{background:#ff69b4;color:white}
@@ -83,6 +90,7 @@ button{
 @keyframes kiss{
   to{transform:translateY(-100px);opacity:0}
 }
+
 </style>
 </head>
 
@@ -95,72 +103,126 @@ button{
   <button id="no">No</button>
 </div>
 
-<audio id="yesSound">
-<source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
+<audio id="loveSound">
+  <source src="https://freesound.org/data/previews/528/528504_7037-lq.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const card=document.getElementById("card");
-const yesSound=document.getElementById("yesSound");
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const card = document.getElementById("card");
+const loveSound = document.getElementById("loveSound");
 
-/* background hearts */
-setInterval(()=>{
- const h=document.createElement("div");
- h.className="bg-heart";
- h.innerHTML="💜";
- h.style.left=Math.random()*100+"%";
- h.style.fontSize=15+Math.random()*20+"px";
- document.body.appendChild(h);
- setTimeout(()=>h.remove(),8000);
-},400);
+/* floating hearts */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "bg-heart";
+  h.innerHTML = "💜";
+  h.style.left = Math.random() * 100 + "%";
+  h.style.fontSize = 15 + Math.random() * 20 + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 8000);
+}, 400);
 
 /* NO runs away */
-no.addEventListener("mouseover",()=>{
- no.style.left=Math.random()*200-100+"px";
- no.style.top=Math.random()*200-100+"px";
+no.addEventListener("mouseover", () => {
+  no.style.left = Math.random() * 200 - 100 + "px";
+  no.style.top = Math.random() * 200 - 100 + "px";
 });
 
-/* YES click */
-yes.onclick=()=>{
- yesSound.play();
+/* YES click - first stage */
+yes.onclick = () => {
+  loveSound.play();
 
- // confetti emojis
- for(let i=0;i<40;i++){
-  const c=document.createElement("div");
-  c.className="confetti";
-  c.innerHTML=["🎉","💖","💜","💘"][Math.floor(Math.random()*4)];
-  c.style.left=Math.random()*100+"%";
-  c.style.top="-20px";
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),3000);
- }
+  // confetti emojis
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.innerHTML = ["🎉","💖","💜","💘"][Math.floor(Math.random()*4)];
+    c.style.left = Math.random() * 100 + "%";
+    c.style.top = "-20px";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
 
- // kisses
- setInterval(()=>{
-  const k=document.createElement("div");
-  k.className="kiss";
-  k.innerHTML="💋";
-  k.style.left=Math.random()*100+"%";
-  k.style.bottom="0";
-  document.body.appendChild(k);
-  setTimeout(()=>k.remove(),2000);
- },400);
+  // kisses animation
+  setInterval(() => {
+    const k = document.createElement("div");
+    k.className = "kiss";
+    k.innerHTML = "💋";
+    k.style.left = Math.random() * 100 + "%";
+    k.style.bottom = "0";
+    document.body.appendChild(k);
+    setTimeout(() => k.remove(), 2000);
+  }, 400);
 
- card.innerHTML=`
- <h2>🎉 Yaayyyyy! 🎉</h2>
- <p>
- Thank you 💖<br><br>
- I’d rather not spend this day with any other person.<br>
- I look forward to it.<br><br>
- I love you 💜
- </p>
-
- <img class="bunny" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
- <img class="bunny" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
- `;
+  // move to second stage after short delay
+  setTimeout(stageTwo, 1500);
 };
+
+/* second stage - ask what to do */
+function stageTwo(){
+  card.innerHTML = `
+    <h2>🎉 Yaayyyyy! 🎉</h2>
+    <p>I love you 💜<br>So… what should we do tonight?</p>
+    <button class="plan" data-choice="sleep">Sleep in 😴</button>
+    <button class="plan" data-choice="dinner">Candle lit dinner 🕯️</button>
+    <button class="plan" data-choice="movie">Movie night 🍿</button>
+    <button class="plan" data-choice="fuck">Fuck 😏🔥</button>
+  `;
+
+  const planButtons = document.querySelectorAll(".plan");
+  planButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const choice = btn.getAttribute("data-choice");
+      showChoice(choice);
+    });
+  });
+}
+
+/* respond to her choice */
+function showChoice(choice){
+  let msg = "";
+  let extra = "";
+
+  switch(choice){
+    case "sleep":
+      msg = "Can’t wait to big spoon you 😴💜";
+      extra = "💤💖💤";
+      break;
+    case "dinner":
+      msg = "I’ll definitely be having you for dessert 🕯️💖";
+      extra = "🍷🍫🍝";
+      break;
+    case "movie":
+      msg = "This one’s good, all in one package, any movie of your choice, food, wine and umm, my dessert… 🍿💜";
+      extra = "🎬🍫🍷💖😏";
+      break;
+    case "fuck": 
+      msg = "Ouuu naughty naughty Kakraba 😏🔥";
+      extra = "I’m getting a lingerie 💋😈🍑💦💖🔥";
+
+      // naughty confetti
+      for(let i=0;i<50;i++){
+        const c=document.createElement("div");
+        c.className="confetti";
+        c.innerHTML=["💋","😈","🍑","💦","🔥"][Math.floor(Math.random()*5)];
+        c.style.left=Math.random()*100+"%";
+        c.style.top="-20px";
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),3000);
+      }
+      break;
+  }
+
+  card.innerHTML = `
+    <h2>${msg}</h2>
+    <p>${extra}</p>
+    <img class="bunny" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+    <img class="bunny" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+  `;
+}
+
 </script>
 
 </body>
