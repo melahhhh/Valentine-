@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💜</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins&display=swap" rel="stylesheet">
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#b57edc;
+  overflow:hidden;
+  font-family:Poppins,sans-serif;
+}
+.bg-heart{
+  position:absolute;
+  font-size:20px;
+  animation:float 8s linear infinite;
+  opacity:.6;
+}
+@keyframes float{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh)}
+}
+.card{
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  width:360px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+  z-index:5;
+  position:relative;
+}
+h2{
+  font-family:Pacifico,cursive;
+  color:#ff4fa3;
+}
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:20px;
+  font-size:18px;
+  margin:8px;
+  cursor:pointer;
+  transition:.2s;
+}
+button:hover{transform:scale(1.05)}
+#yes{background:#ff69b4;color:white}
+#no{background:#ddd;position:relative}
+.confetti{
+  position:absolute;
+  font-size:22px;
+  animation:fall 3s forwards;
+  pointer-events:none;
+}
+@keyframes fall{
+to{transform:translateY(100vh);opacity:0}
+}
+.kiss{
+  position:absolute;
+  font-size:22px;
+  animation:kiss 2s forwards;
+}
+@keyframes kiss{
+to{transform:translateY(-100px);opacity:0}
+}
+.bunny{
+  width:120px;
+  margin-top:10px;
+}
+.choice-display{
+  margin-top:10px;
+  font-size:16px;
+  color:#ff4fa3;
+  font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h2>Kakraba 💜</h2>
+  <p>Will you be my Valentine?</p>
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<!-- Reliable celebration sound -->
+<audio id="loveSound">
+  <source src="https://www.orangefreesounds.com/wp-content/uploads/2018/01/Long-applause-and-cheers.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const card = document.getElementById("card");
+const loveSound = document.getElementById("loveSound");
+
+/* Floating hearts */
+setInterval(()=>{
+  const h = document.createElement("div");
+  h.className="bg-heart";
+  h.innerHTML="💜";
+  h.style.left=Math.random()*100+"%";
+  h.style.fontSize=15+Math.random()*20+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},400);
+
+/* NO runs away */
+no.addEventListener("mouseover", ()=>{
+  no.style.left = Math.random()*200 - 100 + "px";
+  no.style.top = Math.random()*200 - 100 + "px";
+});
+
+/* YES click */
+yes.onclick = ()=>{
+  loveSound.play();
+
+  for(let i=0;i<40;i++){
+    const c = document.createElement("div");
+    c.className="confetti";
+    c.innerHTML=["🎉","💖","💜","💘"][Math.floor(Math.random()*4)];
+    c.style.left=Math.random()*100+"%";
+    c.style.top="-20px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+
+  setInterval(()=>{
+    const k=document.createElement("div");
+    k.className="kiss";
+    k.innerHTML="💋";
+    k.style.left=Math.random()*100+"%";
+    k.style.bottom="0";
+    document.body.appendChild(k);
+    setTimeout(()=>k.remove(),2000);
+  },500);
+
+  setTimeout(stageTwo,1500);
+};
+
+/* Stage 2 */
+function stageTwo(){
+  const prevChoice = localStorage.getItem("herChoice");
+
+  card.innerHTML=`
+<h2>🎉 Yaayyyyy! 🎉</h2>
+<p>
+Thank you! 💕<br><br>
+I’d rather not spend this day with any other person.<br>
+I look forward to this.<br><br>
+I love you 💜
+</p>
+
+<p><b>So… what should we do that night? 💜</b></p>
+
+<button class="plan" data="sleep">Sleep in 😴</button>
+<button class="plan" data="dinner">Candle lit dinner 🕯️</button>
+<button class="plan" data="movie">Movie night 🍿</button>
+<button class="plan" data="fuck">Fuck 😏🔥</button>
+
+<div class="choice-display" id="choiceDisplay"></div>
+`;
+
+const choiceDisplay = document.getElementById("choiceDisplay");
+
+if(prevChoice){
+  const mapping = {
+    sleep: "Sleep in 😴",
+    dinner: "Candle lit dinner 🕯️",
+    movie: "Movie night 🍿",
+    fuck: "Fuck 😏🔥"
+  };
+  choiceDisplay.innerText = "She chose: " + mapping[prevChoice];
+}
+
+document.querySelectorAll(".plan").forEach(b=>{
+  b.onclick = ()=>{
+    const choice = b.getAttribute("data");
+    showChoice(choice);
+    localStorage.setItem("herChoice", choice);
+    choiceDisplay.innerText = "She chose: " + b.innerText;
+  };
+});
+}
+
+/* Final reactions */
+function showChoice(choice){
+let msg="";
+let extra="";
+
+if(choice==="sleep"){
+msg="Can’t wait to big spoon you 😴💜";
+extra="💤💖💤";
+}
+if(choice==="dinner"){
+msg="I’ll definitely be having you for dessert 🕯️💖";
+extra="🍷🍫🍝";
+}
+if(choice==="movie"){
+msg="This one’s good, all in one package…";
+extra="Any movie 🎬, food 🍫, wine 🍷 and umm… my dessert 💖😏";
+}
+if(choice==="fuck"){
+msg="Ouuu naughty naughty Kakraba 😏🔥";
+extra="I’m getting a lingerie 💋😈🍑💦💖🔥";
+for(let i=0;i<50;i++){
+const c=document.createElement("div");
+c.className="confetti";
+c.innerHTML=["💋","😈","🍑","💦","🔥"][Math.floor(Math.random()*5)];
+c.style.left=Math.random()*100+"%";
+c.style.top="-20px";
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),3000);
+}
+}
+
+card.innerHTML=`
+<h2>${msg}</h2>
+<p>${extra}</p>
+<img class="bunny" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+<img class="bunny" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+<div class="choice-display" id="choiceDisplay">She chose: ${choice}</div>
+`;
+}
+</script>
+</body>
+</html>
